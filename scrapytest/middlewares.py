@@ -105,61 +105,22 @@ class ScrapytestDownloaderMiddleware(object):
 
 
 from scrapy import signals
-import random
-import time
-import requests
+import ipproxy
 
 class ProxyMiddleware(object):
 
-    def __init__(self, ip):
-        self.ip = ip
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(ip=crawler.settings.get('PROXIES'))
+    # def __init__(self, ip):
+    #     self.ip = ip
+    #
+    # @classmethod
+    # def from_crawler(cls, crawler):
+    #     return cls(ip=crawler.settings.get('PROXIES'))
 
     def process_request(self, request, spider):
-        ip = self.choice()
-        # ip = random.choice(self.ip)
+        ip = ipproxy.get()
         print('ProxyMiddleware================================= :  ip  '+ip)
         request.meta['proxy'] = ip
 
 
-    def choice(self):
-        ip = random.choice(self.ip)
-        print('ProxyMiddleware---------------------------------- : ip  '+ip)
-        if self.verifyValid(ip,'http'):
-            return ip
-        else:
-            return self.choice()
 
 
-    def verifyValid(self,ip, types):
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.3"}
-        proxy = {'http': str(ip) , 'https': str(ip)}
-        urls = {'http': "https://www.chinaz.com/", 'https': "https://www.baidu.com/"}
-        try:
-            start = time.time()
-            res = requests.get(urls[types.lower()], headers=headers, proxies=proxy,timeout=5)
-            speed = round(time.time() - start, 2)
-        except:
-            return False
-        else:
-            return True
-
-import random
-# 导入data5u文件中的IPPOOL
-from data5u import IPPOOL
-# 导入官方文档对应的HttpProxyMiddleware
-
-class IPPOOlS(object):
-    # 初始化
-    def __init__(self, ip=''):
-        self.ip = ip
-
-    # 请求处理
-    def process_request(self, request, spider):
-        # 先随机选择一个IP
-        thisip = random.choice(IPPOOL)
-        print("当前使用IP是："+ thisip)
-        request.meta["proxy"] = "http://"+thisip
