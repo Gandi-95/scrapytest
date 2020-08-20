@@ -105,7 +105,7 @@ class ScrapytestDownloaderMiddleware(object):
 
 
 from scrapy import signals
-import ipproxy
+# import ipproxy
 
 class ProxyMiddleware(object):
 
@@ -117,9 +117,11 @@ class ProxyMiddleware(object):
     #     return cls(ip=crawler.settings.get('PROXIES'))
 
     def process_request(self, request, spider):
-        ip = ipproxy.get()
-        print('ProxyMiddleware================================= :  ip  '+ip)
-        request.meta['proxy'] = ip
+        # ip = ipproxy.get()
+        # print('ProxyMiddleware================================= :  ip  '+ip)
+        # request.meta['proxy'] = ip
+
+        pass
 
 
 
